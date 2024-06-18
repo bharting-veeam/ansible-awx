@@ -1,0 +1,127 @@
+---
+
+#PLAY 1: Set Variables and Make Persistent
+ - name: Set the Variables Via File and Prompt, Then Persist Them Throughout the Playbook
+   hosts: localhost
+   vars_files:
+     - group_vars/vars.yml
+   vars_prompt:
+        - name: domain_username
+          prompt: "Enter your Domain Username"
+          private: false
+        - name: domain_password
+          prompt: "Enter your Domain Password"
+          unsafe: true
+          private: true
+#          encrypt: "sha512_crypt"
+        - name: vm_name
+          prompt: "Enter the desired name for the VM"
+          private: false
+   gather_facts: false
+      
+   tasks:
+
+    #1. Persist variables across all plays in this playbook
+     - name: Make variables persistent
+       ansible.builtin.set_fact:
+         vm_name: "{{ vm_name }}"
+         domain_username: "{{ domain_username }}"
+         domain_password: "{{ domain_password }}"
+
+
+
+#PLAY 2: Deploy the VM in vCenter
+ - name: Deploy Windows Server 2016 (Standard) from Template
+   hosts: localhost
+   vars_files:
+    - group_vars/vars.yml
+   gather_facts: false
+
+   tasks:
+
+    #1. Set the variables for deploying the VM in the proper location in vCenter
+     - name: Set vcenter_username variable
+       set_fact:
+         vcenter_username: "{{ hostvars['localhost']['domain_username'] }}@{{ domain_name }}"
+
+     - name: Set vm_folder variable
+       set_fact:
+         vm_folder: "Private VMs/{{ hostvars['localhost']['domain_username'] | regex_replace('\\.', ' ') | title }}"
+     
+    #2. Deploy the VM with the specified name from the specified template in the specified location
+     - name: Connect to vCenter and Deploy VM from template
+       community.vmware.vmware_guest:
+         hostname: "{{ vcenter_server }}"
+         username: "{{ vcenter_username }}"
+         password: "{{ hostvars['localhost']['domain_password'] }}" #| password_hash('sha512_crypt') }}"
+         datacenter: "{{ vcenter_datacenter }}"
+         cluster: "{{ vcenter_cluster }}"
+         validate_certs: false
+         name: "{{ hostvars['localhost']['vm_name'] }}"
+         template: cl-WS2016-DC
+#         content_library: "{{ content_library }}"
+         folder: "{{ vm_folder }}"
+         resource_pool: "{{ resource_pool }}"
+         datastore: SSA-COLSTG-DS00 #change this later
+
+        #2.1 Customize the VM
+         customization:
+           orgname: COL Support Lab
+           hostname: "{{ hostvars['localhost']['vm_name'] }}"
+           joindomain: "{{ domain_name }}"
+           domainadmin: "{{ hostvars['localhost']['domain_username'] }}"
+           domainadminpassword: "{{ domain_password }}"
+           existing_vm: false
+           password: "Veeam123!"
+           timezone: 35
+
+        #2.2 Power on the VM and wait for the network
+         state: poweredon
+         wait_for_ip_address: true
+         networks:
+           - name: "{{ vcenter_vdpg }}"
+       delegate_to: localhost       
+
+    #3. Wait for VM to Power On   
+     - name: Wait for VM to power on
+       wait_for:
+         host: "{{ hostvars['localhost']['vm_name'] }}" #look into this: apparently the VM name cannot exceed 15 characters
+         port: 5985
+         delay: 10
+         timeout: 300
+       delegate_to: localhost
+
+
+
+#PLAY 3: Configure the Newly-Deployed VM Using Powershell Script
+ - name: Call Powershell Script to Configure Newly-Deployed Windows VM
+   hosts: localhost
+   vars_files:
+    - group_vars/win.yml
+   gather_facts: false
+
+   tasks:
+    
+    #1. Pause playbook execution while deployment and configuration finalize
+     - name: Pause playbook execution
+       ansible.builtin.pause:
+         minutes: 5
+    
+    #2. Load PS function "Add-LocalAdmin" and execute 
+     - name: Load function and execute to make domain user a local administrator
+       ansible.windows.win_shell: |
+         . C:/Scripts/AddLocalAdmFunc.ps1
+         Add-LocalAdmin "{{ hostvars['localhost']['vm_name'] }}" "{{ hostvars['localhost']['domain_username'] }}"
+       become: yes
+       become_method: runas
+       become_user: "{{ ansible_user }}"
+       delegate_to: "{{ psrunner }}"
+    
+    #3. Run RDP and FW config script
+     - name: Run WS config script to modify RDP and FW
+       ansible.windows.win_shell: |
+         C:/Scripts/ConfigureWSfromTemplate.ps1 "{{ hostvars['localhost']['vm_name'] }}" "{{ hostvars['localhost']['domain_username'] }}"
+       become: yes
+       become_method: runas
+       become_user: "{{ ansible_user }}"
+       delegate_to: "{{ psrunner }}"
