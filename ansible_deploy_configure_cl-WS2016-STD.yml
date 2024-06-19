@@ -4,7 +4,7 @@
  - name: Set the Variables Via File and Prompt, Then Persist Them Throughout the Playbook
    hosts: localhost
    vars_files:
-     - group_vars/vars.yml
+     - vars.yml
    vars_prompt:
         - name: domain_username
           prompt: "Enter your Domain Username"
@@ -34,7 +34,7 @@
  - name: Deploy Windows Server 2016 (Standard) from Template
    hosts: localhost
    vars_files:
-    - group_vars/vars.yml
+    - vars.yml
    gather_facts: false
 
    tasks:
@@ -97,7 +97,7 @@
  - name: Call Powershell Script to Configure Newly-Deployed Windows VM
    hosts: localhost
    vars_files:
-    - group_vars/win.yml
+    - win.yml
    gather_facts: false
 
    tasks:
