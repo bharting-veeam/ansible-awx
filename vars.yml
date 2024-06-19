@@ -1,0 +1,12 @@
+---
+ansible_python_interpreter: /usr/bin/python3
+vcenter_server: colsupvc01.ssa.veeam.local
+vcenter_datacenter: COL
+vcenter_cluster: COL
+content_library: COL LAB Library
+resource_pool: Private VMs
+vcenter_vdpg: _Routable-DHCP(172.31.16.0 22)
+domain_name: ssa.veeam.local
+domain_controller: colsupdc01.ssa.veeam.local
+
+psrunner: colsupadm-win.ssa.veeam.local
