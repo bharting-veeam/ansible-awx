@@ -6,11 +6,11 @@
    vars_files:
      - vars.yml
    vars:
-        - name: domain_username
-          set_fact: "{{ tower_user_name }}"
+     - name: domain_username
+       set_fact: "{{ tower_user_name }}"
           
-        - name: domain_password
-          set_fact: "{{ tower_password }}"
+     - name: domain_password
+       set_fact: "{{ tower_password }}"
 
    gather_facts: false
       
