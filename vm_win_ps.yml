@@ -4,7 +4,6 @@
 - name: Detect vCenter user settings
   hosts: psrunner
   gather_facts: no
-  ansible_connection: winrm
   tasks:
     - name: collect vCenter user info
       win_shell: C:\ansible\CollectvCenterUserInfo.ps1 -SamAccountName {{tower_user_name}} -VCenterName {{awxui_VCenterName}}
