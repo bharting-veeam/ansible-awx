@@ -1,0 +1,61 @@
+---
+# COLLECT USER vCENTER SETTINGS
+# TODO refactor whole playbook into role
+- name: Detect vCenter user settings
+  hosts: psrunner
+  gather_facts: no
+  tasks:
+    - name: collect vCenter user info
+      win_shell: C:\ansible\CollectvCenterUserInfo.ps1 -SamAccountName {{tower_user_name}} -VCenterName {{awxui_VCenterName}}
+      args:
+        executable: pwsh
+      register: ps_result
+
+    - name: Parse ps_result
+      set_fact:
+        vc_user_info: "{{ ps_result.stdout | from_json }}"
+
+    - name: print parsed user info
+      debug:
+        msg: "{{ vc_user_info.VMFolder }}"
+
+    - name: Check if user datastore usage is below specified treshold
+      assert:
+        that:
+          "{{vc_user_info.ConsumedSpaceTresholdGBReached}} == false "
+        fail_msg: "Datastore usage limit reached! The job will fail now"
+
+    - name: Deploy win vm ps way
+      deploy_vmw_win_vm_ps:
+        vc_fqdn: "{{vc_user_info.vCenterFQDN}}"
+        vm_folder_moref: "{{vc_user_info.VMFolderMoRef}}"
+        resource_pool: "{{vc_user_info.ResourcePool}}"
+        shared_dvpg: "{{vc_user_info.SharedDVPG}}"
+        datastore: "{{vc_user_info.Datastore}}"
+        cluster: "{{vc_user_info.Cluster}}"
+        datacenter: "{{vc_user_info.Datacenter}}"
+        time_zone: "{{vc_user_info.TimeZone}}"
+        local_adm_password: "{{vm_administrator_passowrd}}"
+        vm_name: "{{awxui_vm_name}}"
+        local_adm: "{{tower_user_name}}"
+        vm_template: "{{awxui_vm_template}}"
+        vm_mem_mb: "{{awxui_memory_mb}}"
+        vm_num_cpu: "{{awxui_num_cpu_cores_per_socket}}"
+        join_support2: "{{awxui_join_support2}}"
+        remove_from_support2: "{{ awxui_remove_from_support2 | default(omit) }}"
+
+    - name: explicitely set creds
+      set_fact:
+        vc_username_e: "{{ansible_user}}"
+        vc_password_e: "{{ansible_password}}"
+      no_log: True
+
+    - include_role:
+        name: set_attributes
+      vars:
+        vc_hostname: "{{vc_user_info.vCenterFQDN}}"
+        vc_username: "{{vc_username_e}}"
+        vc_password: "{{vc_password_e}}"
+        datacenter_name: "{{vc_user_info.Datacenter}}"
+        folder_name: "{{vc_user_info.VMFolder}}"
+        name_lab: "{{awxui_vm_name}}"
