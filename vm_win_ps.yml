@@ -35,14 +35,14 @@
         cluster: "{{vc_user_info.Cluster}}"
         datacenter: "{{vc_user_info.Datacenter}}"
         time_zone: "{{vc_user_info.TimeZone}}"
-        local_adm_password: "{{vm_administrator_passowrd}}"
+        local_adm_password: "{{vm_administrator_password}}"
         vm_name: "{{awxui_vm_name}}"
         local_adm: "{{tower_user_name}}"
         vm_template: "{{awxui_vm_template}}"
         vm_mem_mb: "{{awxui_memory_mb}}"
         vm_num_cpu: "{{awxui_num_cpu_cores_per_socket}}"
-        join_support2: "{{awxui_join_support2}}"
-        remove_from_support2: "{{ awxui_remove_from_support2 | default(omit) }}"
+        join_ssa: "{{awxui_join_ssa}}"
+        remove_from_ssa: "{{ awxui_remove_from_ssa | default(omit) }}"
 
     - name: explicitely set creds
       set_fact:
