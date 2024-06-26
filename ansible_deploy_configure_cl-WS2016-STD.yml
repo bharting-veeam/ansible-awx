@@ -5,13 +5,6 @@
    hosts: localhost
    vars_files:
      - vars.yml
-   vars:
-     - name: domain_username
-       set_fact: "{{ tower_user_name }}"
-          
-     - name: domain_password
-       set_fact: "{{ tower_password }}"
-
    gather_facts: false
       
    tasks:
@@ -20,8 +13,8 @@
      - name: Make variables persistent
        ansible.builtin.set_fact:
          vm_name: "{{ vm_name }}"
-         domain_username: "{{ domain_username }}"
-         domain_password: "{{ domain_password }}"
+         domain_username: "{{ tower_user_name }}"
+         domain_password: "{{ tower_password }}"
 
 
 
