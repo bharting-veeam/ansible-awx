@@ -5,18 +5,13 @@
    hosts: localhost
    vars_files:
      - vars.yml
-   vars_prompt:
+   vars:
         - name: domain_username
-          prompt: "Enter your Domain Username"
-          private: false
+          set_fact: "{{ tower_user_name }}"
+          
         - name: domain_password
-          prompt: "Enter your Domain Password"
-          unsafe: true
-          private: true
-#          encrypt: "sha512_crypt"
-        - name: vm_name
-          prompt: "Enter the desired name for the VM"
-          private: false
+          set_fact: "{{ tower_password }}"
+
    gather_facts: false
       
    tasks:
