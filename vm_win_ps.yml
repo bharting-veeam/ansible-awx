@@ -26,7 +26,8 @@
         fail_msg: "Datastore usage limit reached! The job will fail now"
 
     - name: Deploy win vm ps way
-      deploy_vmw_win_vm_ps:
+      #deploy_vmw_win_vm_ps:
+      community.vmware.vmware_guest:
         vc_fqdn: "{{vc_user_info.vCenterFQDN}}"
         vm_folder_moref: "{{vc_user_info.VMFolderMoRef}}"
         resource_pool: "{{vc_user_info.ResourcePool}}"
