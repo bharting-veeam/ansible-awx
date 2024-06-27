@@ -13,11 +13,11 @@
 
     - name: Parse ps_result
       set_fact:
-        vc_user_info: "{{ ps_result.stdout }}"
+        vc_user_info: "{{ ps_result.stdout | from_json }}"
 
     - name: print parsed user info
       debug:
-        msg: "{{ vc_user_info.VMFolder }}"
+        msg: ps_result[10]
 
     #- name: Check if user datastore usage is below specified treshold
     #  assert:
