@@ -13,7 +13,7 @@
 
     - name: Parse ps_result
       set_fact:
-        vc_user_info: "{{ ps_result | from_json }}"
+        vc_user_info: "{{ ps_result.stdout | from_json }}"
 
     - name: print parsed user info
       debug:
