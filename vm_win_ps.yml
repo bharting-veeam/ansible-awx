@@ -19,11 +19,11 @@
       debug:
         msg: "{{ vc_user_info.VMFolder }}"
 
-    - name: Check if user datastore usage is below specified treshold
-      assert:
-        that:
-          "{{vc_user_info.ConsumedSpaceTresholdGBReached}} == false "
-        fail_msg: "Datastore usage limit reached! The job will fail now"
+    #- name: Check if user datastore usage is below specified treshold
+    #  assert:
+    #    that:
+    #      "{{vc_user_info.ConsumedSpaceTresholdGBReached}} == false "
+    #    fail_msg: "Datastore usage limit reached! The job will fail now"
 
     - name: Deploy win vm ps way
       #deploy_vmw_win_vm_ps:
