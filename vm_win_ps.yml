@@ -28,14 +28,14 @@
     - name: Deploy win vm ps way
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
-        vc_fqdn: "{{vc_user_info.vCenterFQDN}}"
-        vm_folder_moref: "{{vc_user_info.VMFolderMoRef}}"
-        resource_pool: "{{vc_user_info.ResourcePool}}"
-        shared_dvpg: "{{vc_user_info.SharedDVPG}}"
-        datastore: "{{vc_user_info.Datastore}}"
-        cluster: "{{vc_user_info.Cluster}}"
-        datacenter: "{{vc_user_info.Datacenter}}"
-        time_zone: "{{vc_user_info.TimeZone}}"
+        vc_fqdn: ps_result[2]
+        vm_folder_moref: ps_result[11]
+        resource_pool: ps_result[4]
+        shared_dvpg: ps_result[1]
+        datastore: ps_result[8]
+        cluster: ps_result[0]
+        datacenter: ps_result[3]
+        time_zone: ps_result[6]
         local_adm_password: "{{vm_administrator_password}}"
         vm_name: "{{awxui_vm_name}}"
         local_adm: "{{tower_user_name}}"
@@ -54,9 +54,9 @@
     - include_role:
         name: set_attributes
       vars:
-        vc_hostname: "{{vc_user_info.vCenterFQDN}}"
+        vc_hostname: ps_result[2]
         vc_username: "{{vc_username_e}}"
         vc_password: "{{vc_password_e}}"
-        datacenter_name: "{{vc_user_info.Datacenter}}"
-        folder_name: "{{vc_user_info.VMFolder}}"
+        datacenter_name: ps_result[3]
+        folder_name: ps_result[10]
         name_lab: "{{awxui_vm_name}}"
