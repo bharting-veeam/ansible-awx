@@ -29,8 +29,6 @@
   hosts: ansiblectl
   gather_facts: no
   become: yes
-  vars:
-    ansible_user: "{{tower_user_name}}"
   vars_files:
     - vars.yml
     
@@ -45,7 +43,7 @@
         vm_folder: "Private VMs/{{ hostvars['localhost']['tower_user_name'] | regex_replace('\\.', ' ') | title }}"
       
     - name: Deploy win vm ps way
-      delegate_to: "colsupans-ctl.ssa.veeam.local"
+      delegate_to: ansiblectl
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
         hostname: "{{vcenter_server}}"
