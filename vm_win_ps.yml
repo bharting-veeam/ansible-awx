@@ -39,6 +39,7 @@
         hostname: "{{vcenter_server}}"
         username: "{{ansible_user}}"
         password: "{{ansible_password}}"
+        validate_certs: false
         folder: ps_result[11]
         resource_pool: ps_result[4]
         datastore: ps_result[8]
