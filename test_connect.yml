@@ -7,6 +7,4 @@
   tasks:
 
   - name: Ping host
-    net_ping
-      dest: colsupans-ctl.ssa.veeam.local
-    
+    action: ping
