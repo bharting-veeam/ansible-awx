@@ -62,7 +62,7 @@
           num_cpus: "{{awxui_num_cpu_cores_per_socket}}"
         networks:
           - name: "{{ vcenter_vdpg }}"
-        state: powered_on
+        state: powered-on
         #join_ssa: "{{awxui_join_ssa}}"
         #remove_from_ssa: "{{ awxui_remove_from_ssa | default(omit) }}"
         customization:
