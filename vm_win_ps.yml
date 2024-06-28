@@ -28,6 +28,7 @@
 - name: Deploy win vm ps way
   hosts: ansiblectl
   gather_facts: no
+  become: yes
   vars:
     ansible_user: "{{tower_user_name}}"
   vars_files:
