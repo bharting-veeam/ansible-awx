@@ -43,9 +43,9 @@
         datacenter: ps_result[3]
         name: "{{awxui_vm_name}}"
         template: "{{awxui_vm_template}}"
-          hardware:
-            memory_mb: "{{awxui_memory_mb}}"
-            num_cpus: "{{awxui_num_cpu_cores_per_socket}}"
+        hardware:
+          memory_mb: "{{awxui_memory_mb}}"
+          num_cpus: "{{awxui_num_cpu_cores_per_socket}}"
         networks:
           - name: ps_result[1]
         #join_ssa: "{{awxui_join_ssa}}"
