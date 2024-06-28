@@ -28,6 +28,8 @@
 - name: Deploy win vm ps way
   hosts: ansiblectl
   gather_facts: no
+  vars:
+    ansible_user: "{{tower_user_name}}"
   vars_files:
     - vars.yml
     
@@ -46,7 +48,7 @@
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
         hostname: "{{vcenter_server}}"
-        username: "{{tower_user_name}}"
+        username: "{{vcenter_username}}"
         validate_certs: false
         folder: "{{ vm_folder }}"
         resource_pool: "{{ resource_pool }}"
