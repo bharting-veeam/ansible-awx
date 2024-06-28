@@ -62,6 +62,7 @@
           num_cpus: "{{awxui_num_cpu_cores_per_socket}}"
         networks:
           - name: "{{ vcenter_vdpg }}"
+        state: powered_on
         #join_ssa: "{{awxui_join_ssa}}"
         #remove_from_ssa: "{{ awxui_remove_from_ssa | default(omit) }}"
         customization:
@@ -78,13 +79,3 @@
         vc_username_e: "{{ansible_user}}"
         vc_password_e: "{{ansible_password}}"
       no_log: True
-
-    - include_role:
-        name: set_attributes
-      vars:
-        vc_hostname: "{{vcenter_server}}"
-        vc_username: "{{vc_username_e}}"
-        vc_password: "{{vc_password_e}}"
-        datacenter_name: "{{ vcenter_datacenter }}"
-        folder_name: "{{ vm_folder }}"
-        name_lab: "{{awxui_vm_name}}"
