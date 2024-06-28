@@ -1,0 +1,12 @@
+---
+- name: Test Connection to colsupans-ctl
+  hosts: colsupans-ctl
+  gather_facts: false
+  become: false
+
+  tasks:
+
+  - name: Ping host
+    net_ping
+      dest: colsupans-ctl.ssa.veeam.local
+    
