@@ -36,7 +36,7 @@
       delegate_to: "colsupans-ctl.ssa.veeam.local"
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
-        hostname: ps_result[2]
+        hostname: "{{vcenter_server}}"
         username: "{{ansible_user}}"
         password: "{{ansible_password}}"
         folder: ps_result[11]
