@@ -28,7 +28,7 @@
 - name: Deploy win vm ps way
   hosts: "colsupans-ctl.ssa.veeam.local"
   gather_facts: no
-  become: yes
+  #become: yes
   vars_files:
     - vars.yml
     
