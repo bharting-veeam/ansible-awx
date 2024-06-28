@@ -37,11 +37,11 @@
 
     - name: Set the variables for deploying the VM
       set_fact:
-        vcenter_username: "{{ hostvars['localhost']['ansible_user'] }}@{{ domain_name }}"
+        vcenter_username: "{{ hostvars['localhost']['tower_user_name'] }}@{{ domain_name }}"
 
     - name: Set vm_folder variable
       set_fact:
-        vm_folder: "Private VMs/{{ hostvars['localhost']['ansible_user'] | regex_replace('\\.', ' ') | title }}"
+        vm_folder: "Private VMs/{{ hostvars['localhost']['tower_user_name'] | regex_replace('\\.', ' ') | title }}"
       
     - name: Deploy win vm ps way
       delegate_to: "colsupans-ctl.ssa.veeam.local"
