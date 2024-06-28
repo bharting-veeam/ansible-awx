@@ -28,10 +28,19 @@
 - name: Deploy win vm ps way
   hosts: ansiblectl
   gather_facts: no
-  vars:
-    domain_name: "ssa.veeam.local"
-    vcenter_server: "colsupvc01.ssa.veeam.local"
+  vars_files:
+    - vars.yml
+    
   tasks:
+
+    - name: Set the variables for deploying the VM
+      set_fact:
+        vcenter_username: "{{ hostvars['localhost']['ansible_user'] }}@{{ domain_name }}"
+
+    - name: Set vm_folder variable
+      set_fact:
+        vm_folder: "Private VMs/{{ hostvars['localhost']['ansible_user'] | regex_replace('\\.', ' ') | title }}"
+      
     - name: Deploy win vm ps way
       delegate_to: "colsupans-ctl.ssa.veeam.local"
       #deploy_vmw_win_vm_ps:
@@ -40,18 +49,18 @@
         username: "{{ansible_user}}"
         password: "{{ansible_password}}"
         validate_certs: false
-        folder: ps_result[11]
-        resource_pool: ps_result[4]
-        datastore: ps_result[8]
-        cluster: ps_result[0]
-        datacenter: ps_result[3]
+        folder: "{{ vm_folder }}"
+        resource_pool: "{{ resource_pool }}"
+        datastore: SSA-COLSTG-DS00
+        cluster: "{{ vcenter_cluster }}"
+        datacenter: "{{ vcenter_datacenter }}"
         name: "{{awxui_vm_name}}"
         template: "{{awxui_vm_template}}"
         hardware:
           memory_mb: "{{awxui_memory_mb}}"
           num_cpus: "{{awxui_num_cpu_cores_per_socket}}"
         networks:
-          - name: ps_result[1]
+          - name: "{{ vcenter_vdpg }}"
         #join_ssa: "{{awxui_join_ssa}}"
         #remove_from_ssa: "{{ awxui_remove_from_ssa | default(omit) }}"
         customization:
@@ -72,9 +81,9 @@
     - include_role:
         name: set_attributes
       vars:
-        vc_hostname: ps_result[2]
+        vc_hostname: "{{vcenter_server}}"
         vc_username: "{{vc_username_e}}"
         vc_password: "{{vc_password_e}}"
-        datacenter_name: ps_result[3]
-        folder_name: ps_result[10]
+        datacenter_name: "{{ vcenter_datacenter }}"
+        folder_name: "{{ vm_folder }}"
         name_lab: "{{awxui_vm_name}}"
