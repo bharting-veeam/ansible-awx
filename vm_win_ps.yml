@@ -30,6 +30,7 @@
   gather_facts: no
   vars:
     domain_name: "ssa.veeam.local"
+    vcenter_server: "colsupvc01.ssa.veeam.local"
   tasks:
     - name: Deploy win vm ps way
       delegate_to: "colsupans-ctl.ssa.veeam.local"
