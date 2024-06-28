@@ -1,6 +1,6 @@
 ---
 - name: Test Connection to colsupans-ctl
-  hosts: ansible-ctl
+  hosts: ansiblectl
   gather_facts: false
   become: false
 
