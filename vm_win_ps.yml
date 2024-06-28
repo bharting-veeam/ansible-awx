@@ -46,7 +46,7 @@
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
         hostname: "{{vcenter_server}}"
-        username: "{{ansible_user}}"
+        username: "{{tower_user_name}}"
         password: "{{ansible_password}}"
         validate_certs: false
         folder: "{{ vm_folder }}"
