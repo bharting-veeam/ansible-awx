@@ -43,7 +43,7 @@
         vm_folder: "Private VMs/{{ hostvars['localhost']['tower_user_name'] | regex_replace('\\.', ' ') | title }}"
       
     - name: Deploy win vm ps way
-      delegate_to: ansiblectl
+      delegate_to: "colsupans-ctl.ssa.veeam.local"
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
         hostname: "{{vcenter_server}}"
