@@ -46,36 +46,36 @@
       delegate_to: "colsupans-ctl.ssa.veeam.local"
       #deploy_vmw_win_vm_ps:
       community.vmware.vmware_guest:
-        hostname: "{{vcenter_server}}"
-        username: "{{vcenter_username}}"
-        password: "{{ awxui_pass }}"
+        hostname: "{{ vcenter_server }}"
+        username: "{{ svc_acct }}"
+        password: "{{ svc_acct_pass }}"
         validate_certs: false
         folder: "{{ vm_folder }}"
         resource_pool: "{{ resource_pool }}"
         datastore: SSA-COLSTG-DS00
         cluster: "{{ vcenter_cluster }}"
         datacenter: "{{ vcenter_datacenter }}"
-        name: "{{awxui_vm_name}}"
-        template: "{{awxui_vm_template}}"
+        name: "{{ awxui_vm_name }}"
+        template: "{{ awxui_vm_template }}"
         hardware:
-          memory_mb: "{{awxui_memory_mb}}"
-          num_cpus: "{{awxui_num_cpu_cores_per_socket}}"
+          memory_mb: "{{ awxui_memory_mb }}"
+          num_cpus: "{{ awxui_num_cpu_cores_per_socket }}"
         networks:
           - name: "{{ vcenter_vdpg }}"
         state: powered-on
-        #join_ssa: "{{awxui_join_ssa}}"
+        #join_ssa: "{{ awxui_join_ssa }}"
         #remove_from_ssa: "{{ awxui_remove_from_ssa | default(omit) }}"
         customization:
            orgname: COL Support Lab           
            joindomain: "{{ domain_name }}"
-           domainadmin: "{{ansible_user}}"
-           domainadminpassword: "{{ansible_password}}"
+           domainadmin: "{{ ansible_user }}"
+           domainadminpassword: "{{ ansible_password }}"
            existing_vm: false
-           password: "{{vm_administrator_password}}"
+           password: "{{ vm_administrator_password }}"
            timezone: 35
 
     - name: explicitely set creds
       set_fact:
-        vc_username_e: "{{ansible_user}}"
-        vc_password_e: "{{ansible_password}}"
+        vc_username_e: "{{ ansible_user }}"
+        vc_password_e: "{{ ansible_password }}"
       no_log: True
