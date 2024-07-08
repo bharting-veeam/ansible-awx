@@ -8,5 +8,7 @@ resource_pool: Private VMs
 vcenter_vdpg: _Routable-DHCP(172.31.16.0 22)
 domain_name: ssa.veeam.local
 domain_controller: colsupdc01.ssa.veeam.local
+svc_acct: ansible@ssa.veeam.local
+svc_acct_pass:
 
 psrunner: colsupadm-win.ssa.veeam.local
