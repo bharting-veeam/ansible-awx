@@ -27,6 +27,7 @@
 
 - name: Deploy win vm ps way
   hosts: "colsupans-ctl.ssa.veeam.local"
+  remote_user: ansible
   gather_facts: no
   #become: yes
   vars_files:
