@@ -3,6 +3,8 @@
 # TODO refactor whole playbook into role
 - name: Detect vCenter user settings
   hosts: psrunner
+  username: "{{ svc_acct }}"
+  password: "{{ svc_acct_pass }}"
   gather_facts: no
   tasks:
     - name: collect vCenter user info
