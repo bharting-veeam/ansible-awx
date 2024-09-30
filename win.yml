@@ -1,6 +1,6 @@
-psrunner: colsupadm-win.ssa.veeam.local
+#psrunner: colsupadm-win.ssa.veeam.local
 ansible_user: "adm-ben.harting@ssa.veeam.local"
-ansible_password: "V!0x10Yr"
+ansible_password: 
 ansible_connection: winrm
 ansible_winrm_transport: ntlm
 ansible_port: 5986
